@@ -17,7 +17,15 @@ const getUserById = (req, res) => {
         res.send({ data: user });
       }
     })
-    .catch((err) => res.status(500).send({ message: err.message }));
+    .catch((err) => {
+      if (err.name === 'CastError') {
+        res.status(400).send({
+          message: err.message,
+        });
+      } else {
+        res.status(500).send({ message: err.message });
+      }
+    });
 };
 
 const createUser = (req, res) => {
@@ -27,9 +35,7 @@ const createUser = (req, res) => {
     .catch((err) => {
       if (err.name === 'ValidationError') {
         res.status(400).send({
-          message: `${Object.values(err.errors)
-            .map((error) => error.message)
-            .join(', ')}`,
+          message: err.message,
         });
       } else {
         res.status(500).send({ message: err.message });
@@ -50,11 +56,9 @@ const updateUser = (req, res) => {
       }
     })
     .catch((err) => {
-      if (err.name === 'ValidationError') {
+      if (err.name === 'ValidationError' || err.name === 'CastError') {
         res.status(400).send({
-          message: `${Object.values(err.errors)
-            .map((error) => error.message)
-            .join(', ')}`,
+          message: err.message,
         });
       } else {
         res.status(500).send({ message: err.message });
@@ -75,11 +79,9 @@ const updateAvatar = (req, res) => {
       }
     })
     .catch((err) => {
-      if (err.name === 'ValidationError') {
+      if (err.name === 'ValidationError' || err.name === 'CastError') {
         res.status(400).send({
-          message: `${Object.values(err.errors)
-            .map((error) => error.message)
-            .join(', ')}`,
+          message: err.message,
         });
       } else {
         res.status(500).send({ message: err.message });

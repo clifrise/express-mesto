@@ -12,21 +12,12 @@ const createCard = (req, res) => {
   const { name, link } = req.body;
   Card.create({ name, link, owner: req.user._id })
     .then((card) => {
-      Card.findById(card._id)
-        .populate('owner')
-        .then((fullcard) => {
-          res.status(201).send({ data: fullcard });
-        })
-        .catch((err) => {
-          res.status(500).send({ message: err.message });
-        });
+      res.status(201).send({ data: card });
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
         res.status(400).send({
-          message: `${Object.values(err.errors)
-            .map((error) => error.message)
-            .join(', ')}`,
+          message: err.message,
         });
       } else {
         res.status(500).send({ message: err.message });
@@ -46,7 +37,13 @@ const deleteCard = (req, res) => {
       }
     })
     .catch((err) => {
-      res.status(500).send({ message: err.message });
+      if (err.name === 'CastError') {
+        res.status(400).send({
+          message: err.message,
+        });
+      } else {
+        res.status(500).send({ message: err.message });
+      }
     });
 };
 
@@ -59,13 +56,19 @@ const addLike = (req, res) => {
   )
     .populate('owner')
     .populate('likes')
-    .then((card) => res.send({ data: card }))
+    .then((card) => {
+      if (!card) {
+        res
+          .status(404)
+          .send({ message: 'Карточка с указанным _id не найдена' });
+      } else {
+        res.send({ data: card });
+      }
+    })
     .catch((err) => {
-      if (err.name === 'ValidationError') {
+      if (err.name === 'ValidationError' || err.name === 'CastError') {
         res.status(400).send({
-          message: `${Object.values(err.errors)
-            .map((error) => error.message)
-            .join(', ')}`,
+          message: err.message,
         });
       } else {
         res.status(500).send({ message: err.message });
@@ -82,13 +85,19 @@ const removeLike = (req, res) => {
   )
     .populate('owner')
     .populate('likes')
-    .then((card) => res.send({ data: card }))
+    .then((card) => {
+      if (!card) {
+        res
+          .status(404)
+          .send({ message: 'Карточка с указанным _id не найдена' });
+      } else {
+        res.send({ data: card });
+      }
+    })
     .catch((err) => {
-      if (err.name === 'ValidationError') {
+      if (err.name === 'ValidationError' || err.name === 'CastError') {
         res.status(400).send({
-          message: `${Object.values(err.errors)
-            .map((error) => error.message)
-            .join(', ')}`,
+          message: err.message,
         });
       } else {
         res.status(500).send({ message: err.message });
