@@ -1,8 +1,9 @@
 const express = require('express');
 const mongoose = require('mongoose');
-const { celebrate, Joi, errors } = require('celebrate');
+const { errors } = require('celebrate');
 const { login, createUser } = require('./controllers/users');
 const auth = require('./middlewares/auth');
+const { validateSignIn, validateSignOut } = require('./middlewares/validators');
 
 const router = require('./routes');
 
@@ -19,22 +20,9 @@ mongoose.connect('mongodb://localhost:27017/mestodb', {
 
 app.use(express.json());
 
-app.post('/signin', celebrate({
-  body: Joi.object().keys({
-    email: Joi.string().required(),
-    password: Joi.string().required().min(6),
-  }),
-}), login);
+app.post('/signin', validateSignIn, login);
 
-app.post('/signup', celebrate({
-  body: Joi.object().keys({
-    name: Joi.string().min(2).max(30),
-    about: Joi.string().min(2).max(30),
-    avatar: Joi.string(),
-    email: Joi.string().required(),
-    password: Joi.string().required().min(6),
-  }),
-}), createUser);
+app.post('/signup', validateSignOut, createUser);
 
 app.use(auth);
 
