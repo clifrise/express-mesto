@@ -70,8 +70,8 @@ const validateGetLoggedInUser = celebrate({
 
 const validateGetUserById = celebrate({
   params: Joi.object().keys({
-    userId: Joi.string().alphanum().length(24).messages({
-      'string.alphanum': 'Поле {#label} должно содержать только буквы и цифры!',
+    userId: Joi.string().hex().length(24).messages({
+      'string.hex': 'Поле {#label} должно быть шестнадцатиричной строкой!',
       'string.length': 'Поле {#label} должно быть длиной 24 символа!',
     }),
   }),
@@ -174,8 +174,8 @@ const validateCreateCard = celebrate({
 
 const validateDeleteCard = celebrate({
   params: Joi.object().keys({
-    cardId: Joi.string().alphanum().length(24).messages({
-      'string.alphanum': 'Поле {#label} должно содержать только буквы и цифры!',
+    cardId: Joi.string().hex().length(24).messages({
+      'string.hex': 'Поле {#label} должно быть шестнадцатиричной строкой!',
       'string.length': 'Поле {#label} должно быть длиной 24 символа!',
     }),
   }),
@@ -193,8 +193,8 @@ const validateDeleteCard = celebrate({
 
 const validateAddLike = celebrate({
   params: Joi.object().keys({
-    cardId: Joi.string().alphanum().length(24).messages({
-      'string.alphanum': 'Поле {#label} должно содержать только буквы и цифры!',
+    cardId: Joi.string().hex().length(24).messages({
+      'string.hex': 'Поле {#label} должно быть шестнадцатиричной строкой!',
       'string.length': 'Поле {#label} должно быть длиной 24 символа!',
     }),
   }),
@@ -212,8 +212,8 @@ const validateAddLike = celebrate({
 
 const validateRemoveLike = celebrate({
   params: Joi.object().keys({
-    cardId: Joi.string().alphanum().length(24).messages({
-      'string.alphanum': 'Поле {#label} должно содержать только буквы и цифры!',
+    cardId: Joi.string().hex().length(24).messages({
+      'string.hex': 'Поле {#label} должно быть шестнадцатиричной строкой!',
       'string.length': 'Поле {#label} должно быть длиной 24 символа!',
     }),
   }),

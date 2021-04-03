@@ -14,13 +14,8 @@ const getUsers = (req, res, next) => {
 
 const getUserById = (req, res, next) => {
   User.findById(req.params.userId)
-    .then((user) => {
-      if (!user) {
-        throw new NotFoundError('Пользователь с указанным _id не найден');
-      } else {
-        res.send({ data: user });
-      }
-    })
+    .orFail(new NotFoundError('Пользователь с указанным _id не найден'))
+    .then((user) => res.send({ data: user }))
     .catch((err) => {
       if (err.name === 'CastError') {
         next(new BadRequestError('Невалидный id'));
@@ -32,12 +27,9 @@ const getUserById = (req, res, next) => {
 
 const getLoggedInUser = (req, res, next) => {
   User.findOne({ _id: req.user._id })
+    .orFail(new NotFoundError('Пользователь с указанным _id не найден'))
     .then((user) => {
-      if (!user) {
-        throw new NotFoundError('Пользователь с указанным _id не найден');
-      } else {
-        res.send({ data: user });
-      }
+      res.send({ data: user });
     })
     .catch((err) => {
       if (err.name === 'CastError') {
@@ -94,12 +86,9 @@ const createUser = (req, res, next) => {
 const updateUser = (req, res, next) => {
   const { name, about } = req.body;
   User.findByIdAndUpdate(req.user._id, { name, about }, { new: true })
+    .orFail(new NotFoundError('Пользователь с указанным _id не найден'))
     .then((user) => {
-      if (!user) {
-        throw new NotFoundError('Пользователь с указанным _id не найден');
-      } else {
-        res.send({ data: user });
-      }
+      res.send({ data: user });
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
@@ -115,12 +104,9 @@ const updateUser = (req, res, next) => {
 const updateAvatar = (req, res, next) => {
   const { avatar } = req.body;
   User.findByIdAndUpdate(req.user._id, { avatar }, { new: true, runValidators: true })
+    .orFail(new NotFoundError('Пользователь с указанным _id не найден'))
     .then((user) => {
-      if (!user) {
-        throw new NotFoundError('Пользователь с указанным _id не найден');
-      } else {
-        res.send({ data: user });
-      }
+      res.send({ data: user });
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
@@ -141,12 +127,12 @@ const login = (req, res, next) => {
         { _id: user._id },
         '5e3d71805bebf95279360f870bba241a814ecccb7b7971a49ecf4b939c3f4e2f',
       );
-      res
+      res.status(200)
         .cookie('jwt', token, {
           maxAge: 3600000 * 24 * 7,
           httpOnly: true,
         })
-        .end();
+        .send({ token });
     })
     .catch((err) => {
       next(err);

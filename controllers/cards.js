@@ -28,10 +28,8 @@ const createCard = (req, res, next) => {
 
 const deleteCard = (req, res, next) => {
   Card.findById(req.params.cardId)
+    .orFail(new NotFoundError('Карточка с указанным _id не найдена'))
     .then((card) => {
-      if (!card) {
-        throw new NotFoundError('Карточка с указанным _id не найдена');
-      }
       if (card.owner._id.toString() === req.user._id) {
         card.remove();
         res.send({ message: 'Пост удален' });
@@ -55,14 +53,11 @@ const addLike = (req, res, next) => {
     { $addToSet: { likes: req.user._id } },
     { new: true },
   )
+    .orFail(new NotFoundError('Карточка с указанным _id не найдена'))
     .populate('owner')
     .populate('likes')
     .then((card) => {
-      if (!card) {
-        throw new NotFoundError('Карточка с указанным _id не найдена');
-      } else {
-        res.send({ data: card });
-      }
+      res.send({ data: card });
     })
     .catch((err) => {
       if (err.name === 'CastError') {
@@ -80,14 +75,11 @@ const removeLike = (req, res, next) => {
     { $pull: { likes: req.user._id } },
     { new: true },
   )
+    .orFail(new NotFoundError('Карточка с указанным _id не найдена'))
     .populate('owner')
     .populate('likes')
     .then((card) => {
-      if (!card) {
-        throw new NotFoundError('Карточка с указанным _id не найдена');
-      } else {
-        res.send({ data: card });
-      }
+      res.send({ data: card });
     })
     .catch((err) => {
       if (err.name === 'CastError') {
