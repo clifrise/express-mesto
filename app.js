@@ -16,7 +16,9 @@ const { PORT = 3000 } = process.env.PORT;
 
 const app = express();
 
-app.use(cors());
+app.use(cors({
+  origin: 'https://ruslanbelyi.students.nomoredomains.icu/',
+}));
 app.use(helmet());
 
 app.use(requestLogger);
