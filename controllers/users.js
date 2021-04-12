@@ -1,3 +1,4 @@
+const { NODE_ENV, JWT_SECRET } = process.env;
 const bcrypt = require('bcryptjs');
 const validator = require('validator');
 const jwt = require('jsonwebtoken');
@@ -125,7 +126,7 @@ const login = (req, res, next) => {
     .then((user) => {
       const token = jwt.sign(
         { _id: user._id },
-        '5e3d71805bebf95279360f870bba241a814ecccb7b7971a49ecf4b939c3f4e2f',
+        NODE_ENV === 'production' ? JWT_SECRET : 'super-secret-jwt',
       );
       res.status(200)
         .cookie('jwt', token, {

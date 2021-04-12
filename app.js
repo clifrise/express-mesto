@@ -1,4 +1,7 @@
+require('dotenv').config();
 const express = require('express');
+const cors = require('cors');
+const helmet = require('helmet');
 const mongoose = require('mongoose');
 const { errors } = require('celebrate');
 const { login, createUser } = require('./controllers/users');
@@ -9,9 +12,12 @@ const { requestLogger, errorLogger } = require('./middlewares/logger');
 
 const router = require('./routes');
 
-const { PORT = 3000 } = process.env;
+const { PORT = 3000 } = process.env.PORT;
 
 const app = express();
+
+app.use(cors());
+app.use(helmet());
 
 app.use(requestLogger);
 

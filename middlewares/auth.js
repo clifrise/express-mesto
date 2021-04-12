@@ -1,3 +1,4 @@
+const { NODE_ENV, JWT_SECRET } = process.env;
 const jwt = require('jsonwebtoken');
 const Unauthorized = require('../errors/unauthorized-err');
 const ForbiddenError = require('../errors/forbidden-err');
@@ -11,7 +12,7 @@ module.exports = (req, res, next) => {
     let payload;
     const token = authorization.replace('Bearer ', '');
     try {
-      payload = jwt.verify(token, '5e3d71805bebf95279360f870bba241a814ecccb7b7971a49ecf4b939c3f4e2f');
+      payload = jwt.verify(token, NODE_ENV === 'production' ? JWT_SECRET : 'super-secret-jwt');
     } catch (err) {
       throw new ForbiddenError('Недостаточно прав для выполнения действия');
     }
