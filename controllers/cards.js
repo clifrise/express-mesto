@@ -7,6 +7,7 @@ const getCards = (req, res) => {
   Card.find()
     .populate('owner')
     .populate('likes')
+    .sort({ createdAt: 'desc' })
     .then((cards) => res.send({ data: cards }))
     .catch((err) => res.status(500).send({ message: err.message }));
 };

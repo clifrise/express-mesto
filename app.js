@@ -17,7 +17,8 @@ const { PORT = 3000 } = process.env.PORT;
 const app = express();
 
 app.use(cors({
-  origin: 'https://ruslanbelyi.students.nomoredomains.icu/',
+  origin: 'http://localhost:3001',
+  optionsSuccessStatus: 200,
 }));
 app.use(helmet());
 
