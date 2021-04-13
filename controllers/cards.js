@@ -54,7 +54,6 @@ const addLike = (req, res, next) => {
     { new: true },
   )
     .orFail(new NotFoundError('Карточка с указанным _id не найдена'))
-    .populate('owner')
     .populate('likes')
     .then((card) => {
       res.send({ data: card });
@@ -76,7 +75,6 @@ const removeLike = (req, res, next) => {
     { new: true },
   )
     .orFail(new NotFoundError('Карточка с указанным _id не найдена'))
-    .populate('owner')
     .populate('likes')
     .then((card) => {
       res.send({ data: card });
