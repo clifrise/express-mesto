@@ -89,14 +89,18 @@ const validateGetUserById = celebrate({
 
 const validateUpdateUser = celebrate({
   body: Joi.object().keys({
-    name: Joi.string().min(2).max(30).messages({
-      'string.min': 'Поле {#label} должно быть не меньше {#limit} символов!',
-      'string.max': 'Поле {#label} должно быть не больше {#limit} символов!',
-    }),
-    about: Joi.string().min(2).max(30).messages({
-      'string.min': 'Поле {#label} должно быть не меньше {#limit} символов!',
-      'string.max': 'Поле {#label} должно быть не больше {#limit} символов!',
-    }),
+    name: Joi.string().min(2).max(30).required()
+      .messages({
+        'string.min': 'Поле {#label} должно быть не меньше {#limit} символов!',
+        'string.max': 'Поле {#label} должно быть не больше {#limit} символов!',
+        'string.required': '{#label} обязательное поле!',
+      }),
+    about: Joi.string().min(2).max(30).required()
+      .messages({
+        'string.min': 'Поле {#label} должно быть не меньше {#limit} символов!',
+        'string.max': 'Поле {#label} должно быть не больше {#limit} символов!',
+        'string.required': '{#label} обязательное поле!',
+      }),
   }),
   headers: Joi.object().keys({
     'content-type': Joi.string().valid('application/json').required().messages({
@@ -118,8 +122,9 @@ const validateUpdateAvatar = celebrate({
       }
       return helpers.message('Поле "avatar" должно быть валидным url-адресом');
     })
+      .required()
       .messages({
-        'any.required': 'Поле "avatar" должно быть заполнено',
+        'string.required': 'Поле "avatar" должно быть заполнено',
       }),
   }),
   headers: Joi.object().keys({
